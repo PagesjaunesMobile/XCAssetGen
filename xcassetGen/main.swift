@@ -22,6 +22,7 @@ func start(args : [String]) {
   print("Start")
   defer { print("Done") }
   var shouldUseTemplate = true
+  let addFileForImageToDelete = false
 
   guard let pdfFolder = args[safe: 1],
     let xcassetFileName = args[safe :2]
@@ -89,7 +90,10 @@ let templateText = """
       let pdfFileName = folderName+"/\(fileWithOutExtension).pdf"
       let pdfFileToCopy = pdfFolder+"/"+aFile
       var contentsJSON = jsonForPDF.replacingOccurrences(of: "__FILENAME__", with: aFile)
-      imagesToDelete.append(fileWithOutExtension+".imageset")
+
+      if addFileForImageToDelete {
+        imagesToDelete.append(fileWithOutExtension+".imageset")
+      }
 
       if shouldUseTemplate {
         contentsJSON = contentsJSON.replacingOccurrences(of: "__TEMPLATE__", with: templateText)
@@ -102,8 +106,10 @@ let templateText = """
       try FileManager.default.copyItem(atPath: pdfFileToCopy, toPath: pdfFileName)
     }
 
-    let textForImagesToDelete = imagesToDelete.joined(separator: "\n")
-    try textForImagesToDelete.write(toFile: imagesToDeleteFilePath, atomically: true, encoding: .utf8)
+    if addFileForImageToDelete {
+      let textForImagesToDelete = imagesToDelete.joined(separator: "\n")
+      try textForImagesToDelete.write(toFile: imagesToDeleteFilePath, atomically: true, encoding: .utf8)
+    }
 
     print("Success")
   } catch {
