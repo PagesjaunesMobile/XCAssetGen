@@ -1,5 +1,5 @@
 # XCAssetGen
-Small utility to generate casser from folder
+Small utility to generate `.xcasset` from folder because copying a lot of pdf in XCode and edit them crash Xcode most of the time.
 
 
 # usage
